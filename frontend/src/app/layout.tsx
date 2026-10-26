@@ -6,22 +6,24 @@ import Navbar from '@/components/Navbar';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'VerdeUrbano - Blog & Huerta Urbana',
-  description: 'Plataforma comunitaria de jardinería, consejos y huerta en casa.',
+  title: 'VerdeUrbano | Comunidad & Huerta',
+  description: 'Plataforma para gestión de huertas urbanas, blog de botánica e insumos.',
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="es">
-      <body className={`${inter.className} bg-slate-50 text-slate-800 min-h-screen flex flex-col`}>
+      <body className={`${inter.className} bg-slate-50 text-slate-900 min-h-screen flex flex-col`}>
         <Navbar />
-        <main className="flex-1 max-w-7xl mx-auto w-full p-4 md:p-6">{children}</main>
-        <footer className="bg-emerald-900 text-emerald-100 text-center py-6 mt-12">
-          <p>© 2026 VerdeUrbano - Blog & Huerta Urbana. Todos los derechos reservados.</p>
+        <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
+          {children}
+        </main>
+        <footer className="bg-slate-900 text-slate-400 py-6 text-center text-sm mt-12 border-t border-slate-800">
+          <p>© {new Date().getFullYear()} VerdeUrbano - Todos los derechos reservados.</p>
         </footer>
       </body>
     </html>
