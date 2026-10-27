@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
-import { BookOpen, Calendar, User, Tag } from 'lucide-react';
+import { BookOpen, Calendar, User, Tag, ArrowLeft } from 'lucide-react';
 
 interface Categoria {
   id: number;
@@ -27,6 +28,7 @@ interface Articulo {
 }
 
 export default function BlogPage() {
+  const router = useRouter();
   const [articulos, setArticulos] = useState<Articulo[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState('');
@@ -35,10 +37,17 @@ export default function BlogPage() {
     const obtenerArticulos = async () => {
       try {
         const respuesta = await api.get('/articulos/');
-        setArticulos(respuesta.data);
+        if (Array.isArray(respuesta.data)) {
+          setArticulos(respuesta.data);
+        } else if (respuesta.data && Array.isArray(respuesta.data.results)) {
+          setArticulos(respuesta.data.results);
+        } else {
+          setArticulos([]);
+        }
       } catch (err) {
         console.error('Error al cargar artículos:', err);
         setError('No se pudieron cargar las publicaciones del blog.');
+        setArticulos([]);
       } finally {
         setCargando(false);
       }
@@ -46,6 +55,8 @@ export default function BlogPage() {
 
     obtenerArticulos();
   }, []);
+
+  const listaArticulosSegura = Array.isArray(articulos) ? articulos : [];
 
   if (cargando) {
     return (
@@ -57,6 +68,15 @@ export default function BlogPage() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto px-4 py-8">
+      {/* Botón Volver Atrás */}
+      <button
+        type="button"
+        onClick={() => router.back()}
+        className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-emerald-700 transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" /> Volver atrás
+      </button>
+
       <header className="border-b border-slate-200 pb-5">
         <h1 className="text-3xl font-extrabold text-slate-800 flex items-center gap-2">
           <BookOpen className="w-8 h-8 text-emerald-600" />
@@ -73,14 +93,14 @@ export default function BlogPage() {
         </div>
       )}
 
-      {!error && articulos.length === 0 && (
+      {!error && listaArticulosSegura.length === 0 && (
         <div className="text-center py-12 bg-white rounded-2xl border border-slate-200">
           <p className="text-slate-500 text-lg">No hay artículos disponibles en este momento.</p>
         </div>
       )}
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {articulos.map((post) => (
+        {listaArticulosSegura.map((post) => (
           <article key={post.id} className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
             <div className="space-y-3">
               {post.categoria?.nombre && (
