@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
-import { Sprout, Plus, Calendar, Droplets, Sun, CheckCircle } from 'lucide-react';
+import { Sprout, Plus, Calendar, Droplets, Sun, CheckCircle, ArrowLeft } from 'lucide-react';
 
 interface Planta {
   id: number;
@@ -22,6 +23,7 @@ interface ItemHuerta {
 }
 
 export default function HuertaPage() {
+  const router = useRouter();
   const [catEspecies, setCatEspecies] = useState<Planta[]>([]);
   const [miHuerta, setMiHuerta] = useState<ItemHuerta[]>([]);
   const [cargando, setCargando] = useState(true);
@@ -91,6 +93,15 @@ export default function HuertaPage() {
 
   return (
     <div className="space-y-10 max-w-7xl mx-auto px-4 py-8">
+      {/* Botón Volver Atrás */}
+      <button
+        type="button"
+        onClick={() => router.back()}
+        className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-emerald-700 transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" /> Volver atrás
+      </button>
+
       {/* Encabezado */}
       <header className="border-b border-slate-200 pb-5">
         <h1 className="text-3xl font-extrabold text-slate-800 flex items-center gap-2">

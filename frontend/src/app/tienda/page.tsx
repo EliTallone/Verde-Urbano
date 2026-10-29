@@ -1,8 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import api from '@/lib/api';
-import { ShoppingBag, Search, Tag, ShoppingCart, Check } from 'lucide-react';
+import { ShoppingBag, Search, Tag, ShoppingCart, Check, ArrowLeft } from 'lucide-react';
 
 interface Producto {
   id: number;
@@ -14,6 +15,7 @@ interface Producto {
 }
 
 export default function TiendaPage() {
+  const router = useRouter();
   const [productos, setProductos] = useState<Producto[]>([]);
   const [busqueda, setBusqueda] = useState('');
   const [cargando, setCargando] = useState(true);
@@ -67,6 +69,15 @@ export default function TiendaPage() {
 
   return (
     <div className="space-y-8 max-w-7xl mx-auto px-4 py-8">
+      {/* Botón Volver Atrás */}
+      <button
+        type="button"
+        onClick={() => router.back()}
+        className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-emerald-700 transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" /> Volver atrás
+      </button>
+
       {/* Encabezado */}
       <header className="border-b border-slate-200 pb-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
